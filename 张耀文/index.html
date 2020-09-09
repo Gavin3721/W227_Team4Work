@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style type="text/css">
+        ul li {
+            list-style: none;
+        }
+
+        button {
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <ul>
+            <input type="text" v-model="searchStr" placeholder="卡号" />
+            <li v-for="(item,index) in searchList" :key="item.id">
+                序号：{{index}}___编号：{{item.id}}___卡号：{{item.cardId}}------<button
+                    @click="upd(item.id)">修改</button>&nbsp;&nbsp;<button @click="del(item.id)">删除</button>
+            </li>
+        </ul>
+        <input v-model="stuForm.id" type="text" placeholder="学号" /><br />
+        <input v-model="stuForm.cardId" type="text" placeholder="卡号" /><br />
+        <input v-model="stuForm.pwd" type="password" placeholder="密碼" /><br />
+        <input v-model="stuForm.money" type="text" placeholder="价格" /><br />
+        <button v-show="isAdd" @click="addStu">新增</button>
+        <button v-show="!isAdd" @click="updStu">保存修改</button>
+    </div>
+
+    <script type="text/javascript" src="js/vue.js"></script>
+    <script type="text/javascript">
+        let vm = new Vue({
+            el: "#app",
+            data: {
+                searchStr: '',
+                isAdd: true,
+                stuForm: {
+                    id: '',
+                    cardId: '',
+                    pwd: '',
+                    money: ''
+                },
+                list: [{ id: 1, cardId: "6225880287860549", pwd: "909090", money: 9000 },
+                { id: 2, cardId: "6225880287862345", pwd: "666666", money: 100 },
+                { id: 3, cardId: "6225880287861234", pwd: "888888", money: 5000 },
+                { id: 4, cardId: "6225880287860549", pwd: "909090", money: 9000 },
+                { id: 5, cardId: "6225880287862345", pwd: "666666", money: 100 },
+                { id: 6, cardId: "6225880287861234", pwd: "888888", money: 5000 },
+                { id: 7, cardId: "6225880287860549", pwd: "909090", money: 9000 },
+                { id: 8, cardId: "6225880287862345", pwd: "666666", money: 100 },
+                { id: 9, cardId: "6225880287861234", pwd: "888888", money: 5000 }]
+            },
+            computed: {
+                searchList: function () {
+                    return this.list.filter((item) => {
+                        return item.cardId.indexOf(this.searchStr) >= 0;
+                    });
+                    /* return this.list.filter(function (item) {
+                        that = this;
+                        return item.cardId.indexOf(that.searchStr) >= 0;
+                    }); */
+                    /* var arr = [];
+                    this.list.forEach((item) => {
+                        if (item.cardId.indexOf(this.searchStr) >= 0) {
+                            arr.push(item);
+                        }
+                    });
+                    return arr; */
+                }
+            },
+            methods: {
+                cleanStu: function () {
+                    this.stuForm.id = "";
+                    this.stuForm.cardId = "";
+                    this.stuForm.pwd = "";
+                    this.stuForm.money = "";
+                },
+                addStu: function () {
+                    let obj = { ...this.stuForm };
+                    this.list.push(obj);
+                    this.cleanStu();
+                },
+                updStu: function () {
+                    for (let item of this.list) {
+                        console.log(item.id+"   "+this.stuForm.id);
+                        if (item.id == this.stuForm.id) {
+                            item.cardId = this.stuForm.cardId;
+                            item.pwd = this.stuForm.pwd;
+                            item.money = this.stuForm.money;
+                            this.isAdd = true;
+                            this.cleanStu();
+                            break;
+                        }
+                    }
+                },
+                upd: function (id) {
+                    for (let item of this.list) {
+                        if (item.id == id) {
+                            this.stuForm = {
+                                id: item.id,
+                                cardId: item.cardId,
+                                pwd: item.pwd,
+                                money: item.money
+                            };
+                            this.isAdd = false;
+                            break;
+                        }
+                    }
+                },
+                del: function (id) {
+                    for (let i = 0; i < this.list.length; i++) {
+                        if (this.list[i].id == id) {
+                            this.list.splice(i, 1);
+                            break;
+                        }
+                    }
+                }
+            }
+        });
+
+    </script>
+</body>
+
+</html>
