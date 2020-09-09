@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>增删改查</title>
+</head>
+
+<body>
+    <div id="app">
+        <input type="text" v-model="search" placeholder="no">
+        <ul>
+            <li v-for="item in searchList" :key="item.id">
+                {{item.id}} - {{item.no}} - {{item.pwd}} - {{item.money}} -- <button @click="del(item.id)">删除</button>
+            </li>
+        </ul>
+        <input type="text" v-module="addForm.id" placeholder="id">
+        <input type="text" v-module="addForm.no" placeholder="no">
+        <input type="text" v-module="addForm.pwd" placeholder="pwd">
+        <input type="text" v-module="addForm.money" placeholder="money">
+        <button @click="add">添加</button>
+    </div>
+
+    <script src="vue.js"></script>
+    <script type="text/javascript">
+        var vm = new Vue({
+            el: "#app",
+            data: {
+                search: "",
+                list: [{
+                    id: 1,
+                    no: "111111111",
+                    pwd: "111",
+                    money: "1000"
+                }, {
+                    id: 2,
+                    no: "111111222",
+                    pwd: "222",
+                    money: "1000"
+                }, {
+                    id: 3,
+                    no: "111111333",
+                    pwd: "333",
+                    money: "1000"
+                }],
+                addForm: {
+                    id: "",
+                    no: "",
+                    pwd: "",
+                    money: ""
+                }
+            },
+            computed: {
+                searchList: function() {
+                    return this.list.filter((item) => {
+                            return item.no.indexOf(this.search) >= 0
+                        })
+                        // var that = this;
+                        // return this.list.filter(function(item) {
+                        //         return item.no.indexOf(that.search) >= 0
+                        //     })
+                        //查询的方法一：方法不简洁
+                        // var arr = [];
+                        // for (var i = 0; i < this.list.length; i++) {
+                        //     if (this.list[i].no.indexOf(this.search) >= 0) {
+                        //         arr.push(this.list[i]);
+                        //     }
+                        // }
+                        // return arr;
+                }
+            },
+            methods: {
+                del: function(id) {
+                    for (var i = 0; i < this.list.length; i++) {
+                        if (this.list[i].id == id) {
+                            this.list.splice(i, 1);
+                            break;
+                        }
+                    }
+                },
+                add: function() {
+                    if (this.addForm.id.length > 0) {
+                        var obj = {...this.addForm
+                        }
+                        this.list.push(obj);
+                        this.addForm.id = "";
+                        this.addForm.no = "";
+                        this.addForm.pwd = "";
+                        this.addForm.money = "";
+                    } else {
+                        alert("请输入id");
+                    }
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>
