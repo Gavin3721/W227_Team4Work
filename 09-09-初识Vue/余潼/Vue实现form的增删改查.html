@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>数据的增删改查</title>
+</head>
+<body>
+<div id="app">
+    <input type="text" v-model="search" placeholder="请入输入学号进行查找"/>
+    <ul>
+        <li v-for="item in searchList" :key="list.stuId">
+            {{item.stuId}}---{{item.stuName}}--{{item.stuAge}}--{{item.stuSex}}--
+            <button @click="del(item.stuId)">删除</button>
+        </li>
+    </ul>
+    <input type="text" v-model="addData.stuId" placeholder="stuId"/><br/>
+    <input type="text" v-model="addData.stuName" placeholder="stuName"/><br/>
+    <input type="text" v-model="addData.stuAge" placeholder="stuAge"/><br/>
+    <input type="text" v-model="addData.stuSex" placeholder="stuSex"/><br/>
+    <button @click="add">添加</button>
+</div>
+<script src="js/vue.js"></script>
+<script type="text/javascript">
+    var vm = new Vue({
+        el:"#app",
+        data:{
+            search:"",
+            list:[
+                {
+                    stuId:"1",stuName:"小馨",stuAge:"18",stuSex:"女"
+                },{
+                    stuId:"2",stuName:"小强",stuAge:"20",stuSex:"男"
+                },{
+                    stuId:"3",stuName:"小露",stuAge:"18",stuSex:"女"
+                },{
+                    stuId:"4", stuName:"小潼",stuAge:"23",stuSex:"男"
+                },{
+                    stuId:"5", stuName:"小波",stuAge:"28",stuSex:"男"
+                },{
+                    stuId:"6", stuName:"小炼",stuAge:"20",stuSex:"男"
+                },{
+                    stuId:"7", stuName:"小文",stuAge:"25",stuSex:"男"
+                }
+            ],
+            addData:{
+                stuId:"",
+                stuName:"",
+                stuAge:"",
+                stuSex:""
+            },
+            newData:{
+                stuId:"01",
+                stuName:"YYTT",
+                stuAge:"20",
+                stuSex:"男"
+            }
+        },
+        computed:{
+            //查找
+            searchList:function(){
+                var that=this;
+                return this.list.filter(function (item){
+                    return item.stuId.indexOf(that.search)>=0
+                })
+            }
+        },
+        methods:{
+            //删除
+            del:function(stuId){
+                //console.log(stuId)
+                for(var i=0;i<this.list.length;i++){
+                    if(this.list[i].stuId ==stuId){
+                        this.list.splice(i,1);
+                        break;
+                    }
+                }
+            },
+            //添加
+            add:function (){
+                var obj = {...this.addData};
+                this.list.push(obj);
+                this.addData.stuId = "",
+                this.addData.stuName = "",
+                this.addData.stuAge = "",
+                this.addData.stuSex = ""
+            }
+        }
+    })
+</script>
+</body>
+</html>
