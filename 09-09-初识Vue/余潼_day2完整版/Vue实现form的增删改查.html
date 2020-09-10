@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>数据的增删改查</title>
+</head>
+<body>
+<div id="app">
+    <button @click="isShowInput=true;updateIndex = -1">添加</button>
+    <input type="text" v-model="search" placeholder="请入输入学号进行查找"/>
+    <ul>
+        <li v-for="item in searchList" :key="list.stuId">
+            {{item.stuId}}---{{item.stuName}}--{{item.stuAge}}--{{item.stuSex}}--
+            <button @click="del(item.stuId)">删除</button>
+            <button @click="update(item.stuId)">修改</button>
+        </li>
+    </ul>
+    <div v-show="isShowInput">
+    <input type="text" v-model="addForm.stuId" placeholder="stuId"/><br/>
+    <input type="text" v-model="addForm.stuName" placeholder="stuName"/><br/>
+    <input type="text" v-model="addForm.stuAge" placeholder="stuAge"/><br/>
+    <input type="text" v-model="addForm.stuSex" placeholder="stuSex"/><br/>
+    <button @click="add">保存</button>
+    </div>
+</div>
+<script src="js/vue.js"></script>
+<script type="text/javascript">
+    var vm = new Vue({
+        el:"#app",
+        data:{
+            search:"",
+            list:[
+                {
+                    stuId:"1",stuName:"小馨",stuAge:"18",stuSex:"女"
+                },{
+                    stuId:"2",stuName:"小强",stuAge:"20",stuSex:"男"
+                },{
+                    stuId:"3",stuName:"小露",stuAge:"18",stuSex:"女"
+                },{
+                    stuId:"4", stuName:"小潼",stuAge:"23",stuSex:"男"
+                },{
+                    stuId:"5", stuName:"小波",stuAge:"28",stuSex:"男"
+                },{
+                    stuId:"6", stuName:"小炼",stuAge:"20",stuSex:"男"
+                },{
+                    stuId:"7", stuName:"小文",stuAge:"25",stuSex:"男"
+                }
+            ],
+            updateIndex:-1,
+            isShowInput: false,
+            addForm:{
+                stuId:"",
+                stuName:"",
+                stuAge:"",
+                stuSex:""
+            }
+
+        },
+        computed:{
+            //查找
+            searchList:function(){
+                var that=this;
+                return this.list.filter(function (item){
+                    return item.stuId.indexOf(that.search)>=0
+                })
+            }
+        },
+        methods: {
+            del: function(stuId) {
+                for (var i = 0; i < this.list.length; i++) {
+                    if (this.list[i].stuId == stuId) {
+                        this.list.splice(i, 1);
+                        break;
+                    }
+                }
+            },
+            add: function() {
+                if (this.updateIndex == -1) {
+                    if (this.addForm.stuId.length > 0 &&
+                            this.addForm.stuName.length > 0 &&
+                            this.addForm.stuAge.length > 0 &&
+                            this.addForm.stuSex.length > 0) {
+                        var obj = {...this.addForm}
+                    this.list.push(obj);
+                } else {
+                    alert("请输入stuId");
+                }
+            } else {
+                //说明是修改
+                var obj = {...this.addForm
+    };
+    for (var i = 0; i < this.list.length; i++) {
+        if (this.updateIndex == this.list[i].stuId) {
+            //this.list[i] = obj;
+            this.$set(this.list, i, obj); //
+            break;
+        }
+    }
+    //set
+    //1、Vue.set()
+    //2、this.$set()
+    //console.log(this.list)
+    }
+    this.addForm.stuId = "";
+    this.addForm.stuName = "";
+    this.addForm.stuAge = "";
+    this.addForm.stuSex = "";
+    },
+    update: function(stuId) { //可简写为 update(stuId) => es6的写法
+        this.updateIndex = stuId;
+        for (var i = 0; i < this.list.length; i++) {
+            if (this.list[i].stuId== stuId) {
+                this.addForm.stuId = this.list[i].stuId;
+                this.addForm.stuName = this.list[i].stuName;
+                this.addForm.stuAge = this.list[i].stuAge;
+                this.addForm.stuSex = this.list[i].stuSex;
+                break
+            }
+        }
+
+    }
+    }
+
+    })
+</script>
+</body>
+</html>
