@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<div id="app">
+    <button>添加</button>
+    <input type="text" v-model="search" placeholder="卡号"/>
+    <ul>
+        <li v-for="item in searchList":key="item.id">
+            {{item.cardId}}-------{{item.money}}--<button @click="del(item.id)">删除</button>
+            <button @click="update(item.id)">修改</button>
+        </li>
+    </ul>
+    <input type="text" v-model="addForm.id" placeholder="id"/><br/>
+    <input type="text" v-model="addForm.cardId" placeholder="cardId"/><br/>
+    <input type="text" v-model="addForm.pwd" placeholder="pwd"/><br/>
+    <input type="text" v-model="addForm.money" placeholder="money"/><br/>
+    <button @click="add" >保存</button>
+
+
+
+</div>
+<script src="js/vue.js"></script>
+<script type="text/javascript">
+    var vm=new Vue({
+        el:"#app",
+        data:{
+            search:'',
+            list:[
+                {id:1,cardId:"6225880287860549",pwd:"909090",money:"10000"},
+                {id:2,cardId:"6225880287862345",pwd:"909090",money:"10000"},
+                {id:3,cardId:"6225880287861234",pwd:"909090",money:"10000"},
+                {id:4,cardId:"6225880287863900",pwd:"909090",money:"10000"},
+                {id:5,cardId:"6225880287866299",pwd:"909090",money:"10000"}
+            ],
+            updateIndex:-1,
+            addForm:{
+              id:'',
+              cardId:'',
+              pwd:'',
+              money:''
+            }
+        },
+        computed:{
+            searchList:function(){
+                var that=this;
+                return this.list.filter(function(item){
+                    return item.cardId.indexOf(that.search)>=0
+                })
+            }
+        },
+        methods:{
+            del:function(id){
+                for(var i=0;i<this.list.length;i++){
+                  if(this.list[i].id==id){
+                      this.list.splice(i,1);
+                      break;
+                  }
+                }
+            },
+            add:function(){
+                if(this.updateIndex==-1){
+                    var obj= {...this.addForm};
+                    this.list.push(obj);
+                    this.addForm.id="";
+                    this.addForm.cardId="";
+                    this.addForm.pwd="";
+                    this.addForm.money="";
+                }else{
+                    //说明是修改
+                    var obj={...this.addForm};
+                    for (var i=0;i<this.list.length;i++){
+                        if(this.updateIndex==this.list[i].id){
+                            console.log(this.list[i].id)
+//                            this.list[i]=obj;
+                            this.$set(this.list,i,obj);
+                            break;
+                        }
+                    }
+    }
+                    this.addForm.stuId = "";
+                    this.addForm.stuName = "";
+                    this.addForm.stuAge = "";
+                    this.addForm.stuSex = "";
+            },
+            update:function (id){
+               this. updateIndex=id;
+                for(var i=0;i<this.list.length;i++){
+                    if(id==this.list[i].id){
+                        this.addForm.id=this.list[i].id;
+                        this.addForm.cardId=this.list[i].cardId;
+                        this.addForm.pwd=this.list[i].pwd;
+                        this.addForm.money=this.list[i].money;
+                        break;
+
+                    }
+                }
+
+        //set方法，更新问数据重新渲染页面
+       // console.log(this.list);
+            }
+        }
+    })
+</script>
+</body>
+</html>
