@@ -9,16 +9,30 @@
     </div>
 <!--    操作-->
     <div>
+      <el-card>
+        <el-button type="primary" @click="dialogFormVisible=true">添加部门</el-button>
+      </el-card>
+    </div>
+    <div>
       <el-button type="primary" @click="dialogFormVisible = true">打开嵌套表单的 Dialog</el-button>
       <el-dialog title="添加部门" :visible.sync="dialogFormVisible">
-        <el-form :model="form">
+        <el-form :model="edutform">
           <el-form-item label="部门名称">
-            <el-input v-model="form.name" autocomplete="off"></el-input>
+            <el-input v-model="edutform.name" autocomplete="off"></el-input>
           </el-form-item>
           <el-form-item label="部门描述">
-            <el-input v-model="form.descript" autocomplete="off"></el-input>
+            <el-input v-model="edutform.descript" autocomplete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="状态">
+            <el-select v-model="editform.status" autocomplete="off">
+            <el-option label="有效" value="1">
+            </el-option>
+            <el-option label="无效" value="0">
+            </el-option>
+            </el-select>
           </el-form-item>
         </el-form>
+
         <div slot="footer" class="dialog-footer">
           <el-button @click="dialogFormVisible = false">取 消</el-button>
           <el-button type="primary" @click="addDept = false">添加</el-button>
@@ -28,7 +42,7 @@
 <!--    列表-->
     <el-table
         :data="deptData"
-        height="250"
+        height="550"
         border
         style="width: 100%">
       <el-table-column
@@ -62,9 +76,9 @@
       </el-table-column>
       <el-table-column
           label="操作">
-        <template>
-          <buttom>删除</buttom>
-          <button>修改</button>
+        <template slot-scope="scope">
+          <el-button type="primary" icon="el-icon-edit" circle @click="edit(scope.row)"></el-button>
+          <el-button type="danger" icon="el-icon-delete" circle @click="del(scope.row.DeptNo)"></el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -78,9 +92,15 @@ export default {
     return {
       deptData: [],
       dialogFormVisible: false,
+      dialogFormEdiVisible:false,
       form: {
         name:'',
         descript:''
+      },
+      editform: {
+        name:'',
+        descript:'',
+        status:0
       }
     }
   },
@@ -120,12 +140,40 @@ export default {
           this.$alert(result.message);
         }
       }).catch(() => {})
+    },
+    del:function (deptNo) {
+      //发起一个请求到服务器，让服务器删除这条数据
+      this.$axios.get('/api/delDept',{
+        params: {
+          deptNo:deptNo
+        }
+      }).then((response) => {
+          var result =response.data;
+          if (result.message==="删除成功"){
+            this.getDeptList()
+          }else {
+            this.$alert(result.message)
+          }
+      }).eatch((err) => {
+        console.log(err)
+        this.$alert('请求出错请检查')
+      })
+
+    },
+    edit: function (obj){
+      this.dialogFormEdiVisible = true
+      this.editform.name = obj.DeptDescript
+      this.editform=status = obj.Status
     }
   }
 }
 </script>
 
 <style scoped>
+  .dept .el-card{
+    margin: 20px 0;
+    text-align: left;
+  }
  .statusActive{
    padding: 5px 10px ;
    color: white;
