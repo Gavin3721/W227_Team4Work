@@ -88,9 +88,72 @@ app.post("/addDept",function (request,response){
             response.send({code:500,message:"数据库异常"});
         }else {
             if(data.affectedRows>0){
-                response.send({code:500,message:"添加成功"});
+                response.send({code:200,message:"添加成功"});
+            }else {
+                response.send({code:201,message:"添加失败"});
             }
-            response.send({code:500,message:"添加失败"});
+        }
+    })
+    //
+    connect.end();
+})
+
+//删除部门
+app.get("/delDept",function (request,response){
+    //接受参数
+    var deptNo = request.query.deptNo;
+    //取数据库添加部门
+    var connect=mysql.createConnection({
+        host:"localhost",
+        user:"root",
+        pwd:"",
+        database:"manage"
+    });
+    //
+    connect.connect();
+    //
+    connect.query("update department set status = 0 where DeptNo = ?",[deptNo],function (err,data){
+        if(err){
+            console.log(err);
+            response.send({code:500,message:"数据库异常"});
+        }else {
+            if(data.affectedRows>0){
+                response.send({code:200,message:"删除成功"});
+            }else {
+                response.send({code:200,message:"删除失败"});
+            }
+        }
+    })
+    //
+    connect.end();
+})
+//修改部门
+app.post("/editDept",function (request,response){
+    //接受参数
+    var deptno = request.body.deptNo;
+    var deptname = request.body.deptName;
+    var descript = request.body.deptDescript;
+    var status = request.body.status;
+    //取数据库添加部门
+    var connect=mysql.createConnection({
+        host:"localhost",
+        user:"root",
+        pwd:"",
+        database:"manage"
+    });
+    //
+    connect.connect();
+    //
+    connect.query("update department set DeptName = ?,DeptDescript = ?,status = ? where DeptNo = ?",[deptname,descript,status,deptno],function (err,data){
+        if(err){
+            console.log(err);
+            response.send({code:500,message:"数据库异常"});
+        }else {
+            if(data.affectedRows>0){
+                response.send({code:200,message:"修改成功"});
+            }else {
+                response.send({code:200,message:"修改失败"});
+            }
         }
     })
     //
